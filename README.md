@@ -132,6 +132,11 @@ function App() {
 }
 
 export default App;
+
+// void
+const handleClick = (): void => {
+  console.log("clicked");
+};
 ```
 
 ## 4. typescript for Props - User defined types
@@ -482,49 +487,306 @@ export default App;
   export default User;
   ```
 
-  // Typing event props
-  click event: event: React.MouseEvent<HTMLButtonElement>
-  type ButtonProps = {
-  handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  };
+## 5. Typing Event Props
 
+- example
+  ```tsx
+      // Typing event props
+    click event: event: React.MouseEvent<HTMLButtonElement>
+    type ButtonProps = {
+    handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    };
+  ```
+
+## 6. Style Props
+
+- example
+
+  ```tsx
   // props for styles -> React.CSSProperties
   import React from "react";
 
-         type ButtonProps = {
-           styles: React.CSSProperties;
-         };
+  type ButtonProps = {
+    styles: React.CSSProperties;
+  };
 
-         const Button = (props: ButtonProps) => {
-           return <button style={props.styles}>click me</button>;
-         };
+  const Button = (props: ButtonProps) => {
+    return <button style={props.styles}>click me</button>;
+  };
 
-         export default Button;
+  export default Button;
 
-         import "./App.css";
-         import Button from "./components/Button";
+  import "./App.css";
+  import Button from "./components/Button";
 
-         function App() {
-           return (
-             <div className="App">
-               <Button
-                 styles={{ backgroundColor: "green", padding: "1rem", color: "white" }}
-               />
-             </div>
-           );
-         }
+  function App() {
+    return (
+      <div className="App">
+        <Button
+          styles={{ backgroundColor: "green", padding: "1rem", color: "white" }}
+        />
+      </div>
+    );
+  }
 
-         export default App;
+  export default App;
+  ```
 
-       // tips
-       // 1. destructure props
-       // 2. create file name as Person.types.ts and export the types so that you can import from anywhere
+## 7. Typing useState Hooks
 
-```
+- example
 
-```
+  ```tsx
+  import React, { useState } from "react";
+  import "./App.css";
 
-```
+  const App = () => {
+    // type is automatically infereed as number
+    const [count, setCount] = useState(0);
 
-```
+    const handleIncrement = (): void => {
+      setCount((count) => count + 1);
+    };
+
+    const handleDecrement = (): void => {
+      setCount((count) => count - 1);
+    };
+
+    return (
+      <div className="App">
+        <h1>Count : {count}</h1>
+        <button onClick={handleIncrement}>+</button>
+        <button onClick={handleDecrement}>-</button>
+      </div>
+    );
+  };
+
+  export default App;
+
+  // dealing with future values in useState Hook
+  import React, { useState } from "react";
+  import "./App.css";
+
+  type User = {
+    id: number;
+    name: string;
+  };
+
+  const App = () => {
+    // const [data, setData] = useState<null | string>(null);
+    const [data, setData] = useState<null | User>(null);
+
+    const handleSetData = () => {
+      // setData("Anisul islam");
+      setData({ id: 101, name: "anisul islam" });
+      console.log(data);
+    };
+
+    return (
+      <div className="App">
+        <h1>UseState Future value</h1>
+        <button onClick={handleSetData}>set data</button>
+        {/* {data && <p>{data}</p>} */}
+      <!-- <p>{data?.id}</p> -->
+      <!-- <p>{data?.name}</p> -->
+      </div>
+    );
+  };
+
+  export default App;
+
+  // type asertion - without optional chaining operator
+  import React, { useState } from "react";
+  import "./App.css";
+
+  type User = {
+    id: number;
+    name: string;
+  };
+
+  const App = () => {
+    // const [data, setData] = useState<null | string>(null);
+    const [data, setData] = useState<User>({} as User);
+
+    const handleSetData = () => {
+      // setData("Anisul islam");
+      setData({ id: 101, name: "anisul islam" });
+      console.log(data);
+    };
+
+    return (
+      <div className="App">
+        <h1>UseState Future value</h1>
+        <button onClick={handleSetData}>set data</button>
+        {/* {data && <p>{data}</p>} */}
+        <p>{data.id}</p>
+        <p>{data.name}</p>
+      </div>
+    );
+  };
+
+  export default App;
+  ```
+
+## 8. Typing useReducer Hooks
+
+- example
+
+  ```tsx
+  import React, { useReducer, useState } from "react";
+  import "./App.css";
+
+  type CounterState = {
+    count: number;
+  };
+
+  type CounterAction = {
+    type: string;
+    payload?: number;
+  };
+
+  const initialState = {
+    count: 0,
+  };
+
+  const reducer = (state: CounterState, action: CounterAction) => {
+    switch (action.type) {
+      case "INCREMENT":
+        return {
+          ...state,
+          count: state.count + 1,
+        };
+      case "RESET":
+        return {
+          ...state,
+          count: 0,
+        };
+      case "DECREMENT":
+        return {
+          ...state,
+          count: state.count - 1,
+        };
+
+      default:
+        return state;
+    }
+  };
+
+  const App = () => {
+    // const [count, setCount] = useState(0);
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const handleIncrement = () => {
+      dispatch({ type: "INCREMENT" });
+    };
+
+    const handleReset = () => {
+      dispatch({ type: "RESET" });
+    };
+
+    const handleDecrement = () => {
+      dispatch({ type: "DECREMENT" });
+    };
+
+    return (
+      <div className="App">
+        <h1>Count : {state.count}</h1>
+        <button onClick={handleIncrement}>+</button>
+        <button onClick={handleReset}>0</button>
+        <button onClick={handleDecrement}>-</button>
+      </div>
+    );
+  };
+
+  export default App;
+
+  //Restricting action types
+  type CounterAction = {
+    type: "INCREMENT" | "DECREMENT" | "RESET";
+    payload?: number;
+  };
+
+  import React, { useReducer, useState } from "react";
+  import "./App.css";
+
+  type CounterState = {
+    count: number;
+  };
+
+  type UpdateAction = {
+    type: "INCREMENT" | "DECREMENT" | "RESET";
+    payload?: number;
+  };
+
+  type CounterActionBy5 = {
+    type: "INCREMENTBY5";
+    payload: number;
+  };
+
+  const initialState = {
+    count: 0,
+  };
+
+  type CounterAction = UpdateAction | CounterActionBy5;
+
+  const reducer = (state: CounterState, action: CounterAction) => {
+    switch (action.type) {
+      case "INCREMENT":
+        return {
+          ...state,
+          count: state.count + 1,
+        };
+      case "INCREMENTBY5":
+        return {
+          ...state,
+          count: state.count + action.payload,
+        };
+      case "RESET":
+        return {
+          ...state,
+          count: 0,
+        };
+      case "DECREMENT":
+        return {
+          ...state,
+          count: state.count - 1,
+        };
+
+      default:
+        return state;
+    }
+  };
+
+  const App = () => {
+    // const [count, setCount] = useState(0);
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const handleIncrement = () => {
+      dispatch({ type: "INCREMENT" });
+    };
+    const handleIncrementBy5 = () => {
+      dispatch({ type: "INCREMENTBY5", payload: 5 });
+    };
+
+    const handleReset = () => {
+      dispatch({ type: "RESET" });
+    };
+
+    const handleDecrement = () => {
+      dispatch({ type: "DECREMENT" });
+    };
+
+    return (
+      <div className="App">
+        <h1>Count : {state.count}</h1>
+        <button onClick={handleIncrement}>+</button>
+        <button onClick={handleIncrementBy5}>+5</button>
+        <button onClick={handleReset}>0</button>
+        <button onClick={handleDecrement}>-</button>
+      </div>
+    );
+  };
+
+  export default App;
+  ```
