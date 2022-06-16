@@ -1,46 +1,189 @@
-# Getting Started with Create React App
+## basic props type
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- why ts?
+  - auto suggestion / auto completion
+  - easy debugging
+  - better documentation
+- example of basic props type
 
-## Available Scripts
+  ```js
+    // component props is an object
+    <!-- let name: string
+    let age: number  -->
 
-In the project directory, you can run:
+    type UserProps = {
+        name: string;
+        age: number;
+      };
 
-### `npm start`
+     // const User = (props: UserProps) => {
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    // const User = (props: { name: string, age: number }) => {
+    const User = ({name, age}: { name: string, age: number }) => {
+      return (
+      <div>
+        <h2>
+          {props.name} is {props.age} years old
+        </h2>
+      </div>
+    );
+  };
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+  export default User;
 
-### `npm test`
+  import "./App.css";
+  import User from "./components/User";
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  function App() {
+    return (
+      <div className="App">
+        <User name="Anisul" age={32} />
+      </div>
+    );
+  }
 
-### `npm run build`
+  export default App;
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  // more
+    import "./App.css";
+  import User from "./components/User";
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+      let location = {
+      city: "Tampere",
+      country: "Finland",
+      };
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+      let languages = ["Bangla", "English", "Finnish"];
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+      function App() {
+        return (
+        <div className="App">
+          <User
+                  name="Rabeya"
+                  age={31}
+                  isLoggedIn={true}
+                  location={location}
+                  languages={languages}
+                />
+        </div>
+        );
+      }
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+      export default App;
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+      import React from "react";
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+      type UserProps = {
+        name: string;
+        age: number;
+        isLoggedIn: boolean;
+        location: {
+          city: string;
+          country: string;
+        };
+        languages: string[];
+      };
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+      const User = (props: UserProps) => {
+        return (
+          <div>
+            {props.isLoggedIn && (
+              <div>
+                <h2>
+                  {props.name} is {props.age} years old.
+                </h2>
+                <p>
+                  Address: {props.location.city}, {props.location.country}
+                </p>
+                <p>
+                  Speaks:
+                  {props.languages.map((language, index) => {
+                    return <span key={index}> {language} </span>;
+                  })}
+                </p>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      export default User;
+
+
+    // children passing
+    import React from "react";
+
+    type HeadingProps = {
+      children: string;
+    };
+
+    const Heading = (props: HeadingProps) => {
+      return <p>{props.children}</p>;
+    };
+
+    export default Heading;
+
+      <Heading>Anisul Islam</Heading>
+
+
+      // component type: React.ReactNode
+      // passing components inside components
+      import React from "react";
+
+      type HeadingProps = {
+        children: React.ReactNode;
+      };
+
+      const Heading = (props: HeadingProps) => {
+        return <div>{props.children}</div>;
+      };
+
+      export default Heading;
+
+        <Heading>
+        <Text />
+      </Heading>
+
+
+      // Typing event props
+      click event: event: React.MouseEvent<HTMLButtonElement>
+      type ButtonProps = {
+        handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+          handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+      };
+
+      // props for styles -> React.CSSProperties
+        import React from "react";
+
+          type ButtonProps = {
+            styles: React.CSSProperties;
+          };
+
+          const Button = (props: ButtonProps) => {
+            return <button style={props.styles}>click me</button>;
+          };
+
+          export default Button;
+
+          import "./App.css";
+          import Button from "./components/Button";
+
+          function App() {
+            return (
+              <div className="App">
+                <Button
+                  styles={{ backgroundColor: "green", padding: "1rem", color: "white" }}
+                />
+              </div>
+            );
+          }
+
+          export default App;
+
+        // tips
+        // 1. destructure props
+        // 2. create file name as Person.types.ts and export the types so that you can import from anywhere
+  ```
