@@ -190,82 +190,229 @@ export default App;
   }
 
   export default App;
+
+  // more updates for App.tsx
+  import React from "react";
+  import "./App.css";
+  import User from "./components/User";
+
+  const users = [
+    {
+      id: 1,
+      name: "anisul islam",
+      email: "anisul2010s@yahoo.co.uk",
+      age: 32,
+      isRegistered: true,
+    },
+    {
+      id: 2,
+      name: "Rabeya Begum",
+      email: "rabu2010s@yahoo.co.uk",
+      age: 31,
+      isRegistered: false,
+    },
+  ];
+
+  function App() {
+    return (
+      <div className="App">
+        <h1>User Management App</h1>
+        {users.map((user) => (
+          <User key={user.id} user={user} />
+        ))}
+      </div>
+    );
+  }
+
+  export default App;
   ```
 
-  // children passing
+- array props
+
+  ```tsx
+  // simple example
   import React from "react";
 
-  type HeadingProps = {
-  children: string;
+  type UserProps = {
+    lang: string[];
   };
-
-  const Heading = (props: HeadingProps) => {
-  return <p>{props.children}</p>;
+  const User = ({ lang }: UserProps) => {
+    return (
+      <div style={{ border: "1px solid", margin: "1rem" }}>
+        <p>
+          Speaks:{" "}
+          {lang.map((language, index) => {
+            return <span key={index}>{language} </span>;
+          })}
+        </p>
+      </div>
+    );
   };
+  export default User;
 
-  export default Heading;
+  // App.tsx
+  import React from "react";
+  import "./App.css";
+  import User from "./components/User";
+  function App() {
+    return (
+      <div className="App">
+        <h1>User Management App</h1>
+        <User lang={["Bangla", "English", "Finnish"]} />
+      </div>
+    );
+  }
+  export default App;
 
-      <Heading>Anisul Islam</Heading>
+  // complex example
+  import React from "react";
 
+  type UserProps = {
+    user: {
+      name: string;
+      email: string;
+      age: number;
+      isRegistered: boolean;
+      languages: string[];
+    };
+  };
+  const User = ({ user }: UserProps) => {
+    return (
+      <div style={{ border: "1px solid", margin: "1rem" }}>
+        <h2>{user.name}</h2>
+        <p>{user.email}</p>
+        <p>{user.age} years old</p>
+        {user.isRegistered ? (
+          <p>Registered Student</p>
+        ) : (
+          <p>Unregistered Student</p>
+        )}
+        <p>
+          Speaks:{" "}
+          {user.languages.map((language, index) => {
+            return <span key={index}>{language} </span>;
+          })}
+        </p>
+      </div>
+    );
+  };
+  export default User;
 
-      // component type: React.ReactNode
-      // passing components inside components
-      import React from "react";
+  // App.tsx
+  import React from "react";
+  import "./App.css";
+  import User from "./components/User";
 
-      type HeadingProps = {
-        children: React.ReactNode;
-      };
+  const users = [
+    {
+      id: 1,
+      name: "anisul islam",
+      email: "anisul2010s@yahoo.co.uk",
+      age: 32,
+      isRegistered: true,
+      languages: ["Bangla", "English"],
+    },
+    {
+      id: 2,
+      name: "Rabeya Begum",
+      email: "rabu2010s@yahoo.co.uk",
+      age: 31,
+      isRegistered: false,
+      languages: ["Bangla", "English", "Finnish"],
+    },
+  ];
 
-      const Heading = (props: HeadingProps) => {
-        return <div>{props.children}</div>;
-      };
-
-      export default Heading;
-
-        <Heading>
-        <Text />
-      </Heading>
-
-
-      // Typing event props
-      click event: event: React.MouseEvent<HTMLButtonElement>
-      type ButtonProps = {
-        handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-          handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-      };
-
-      // props for styles -> React.CSSProperties
-        import React from "react";
-
-          type ButtonProps = {
-            styles: React.CSSProperties;
-          };
-
-          const Button = (props: ButtonProps) => {
-            return <button style={props.styles}>click me</button>;
-          };
-
-          export default Button;
-
-          import "./App.css";
-          import Button from "./components/Button";
-
-          function App() {
-            return (
-              <div className="App">
-                <Button
-                  styles={{ backgroundColor: "green", padding: "1rem", color: "white" }}
-                />
-              </div>
-            );
-          }
-
-          export default App;
-
-        // tips
-        // 1. destructure props
-        // 2. create file name as Person.types.ts and export the types so that you can import from anywhere
-
+  function App() {
+    return (
+      <div className="App">
+        <h1>User Management App</h1>
+        {users.map((user) => (
+          <User key={user.id} user={user} />
+        ))}
+      </div>
+    );
+  }
+  export default App;
   ```
 
-  ```
+// children passing
+import React from "react";
+
+type HeadingProps = {
+children: string;
+};
+
+const Heading = (props: HeadingProps) => {
+return <p>{props.children}</p>;
+};
+
+export default Heading;
+
+     <Heading>Anisul Islam</Heading>
+
+
+     // component type: React.ReactNode
+     // passing components inside components
+     import React from "react";
+
+     type HeadingProps = {
+       children: React.ReactNode;
+     };
+
+     const Heading = (props: HeadingProps) => {
+       return <div>{props.children}</div>;
+     };
+
+     export default Heading;
+
+       <Heading>
+       <Text />
+     </Heading>
+
+
+     // Typing event props
+     click event: event: React.MouseEvent<HTMLButtonElement>
+     type ButtonProps = {
+       handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+         handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+     };
+
+     // props for styles -> React.CSSProperties
+       import React from "react";
+
+         type ButtonProps = {
+           styles: React.CSSProperties;
+         };
+
+         const Button = (props: ButtonProps) => {
+           return <button style={props.styles}>click me</button>;
+         };
+
+         export default Button;
+
+         import "./App.css";
+         import Button from "./components/Button";
+
+         function App() {
+           return (
+             <div className="App">
+               <Button
+                 styles={{ backgroundColor: "green", padding: "1rem", color: "white" }}
+               />
+             </div>
+           );
+         }
+
+         export default App;
+
+       // tips
+       // 1. destructure props
+       // 2. create file name as Person.types.ts and export the types so that you can import from anywhere
+
+```
+
+```
+
+```
+
+```
