@@ -160,6 +160,36 @@ export default App;
   };
 
   export default User;
+
+  // App.tsx
+  import React from "react";
+  import "./App.css";
+  import User from "./components/User";
+
+  const user1 = {
+    name: "anisul islam",
+    email: "anisul2010s@yahoo.co.uk",
+    age: 32,
+    isRegistered: true,
+  };
+  const user2 = {
+    name: "Rabeya Begum",
+    email: "rabu2010s@yahoo.co.uk",
+    age: 31,
+    isRegistered: false,
+  };
+
+  function App() {
+    return (
+      <div className="App">
+        <h1>User Management App</h1>
+        <User user={user1} />
+        <User user={user2} />
+      </div>
+    );
+  }
+
+  export default App;
   ```
 
   // children passing
