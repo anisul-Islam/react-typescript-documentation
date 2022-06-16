@@ -16,6 +16,13 @@
   - gives auto suggestion
   - provides better documentation
 
+- Course outcomes
+  - props types
+    - built-in data type props
+    - user defined data type props
+    - events props
+  - hooks types
+
 ## 2. Environment setup
 
 - install node & VSCode
@@ -333,52 +340,157 @@ export default App;
     );
   }
   export default App;
+
+  // one more array example
+
+  // App.tsx
+  import React from "react";
+  import "./App.css";
+  import User from "./components/User";
+  const users = [
+    {
+      id: 1,
+      name: "anisul islam",
+      email: "anisul2010s@yahoo.co.uk",
+    },
+    {
+      id: 2,
+      name: "Rabeya Begum",
+      email: "rabu2010s@yahoo.co.uk",
+    },
+  ];
+
+  function App() {
+    return (
+      <div className="App">
+        <h1>User Management App</h1>
+        <User users={users} />
+      </div>
+    );
+  }
+  export default App;
+
+  // User.tsx
+  import React from "react";
+  type UserProps = {
+    users: {
+      id: number;
+      name: string;
+      email: string;
+    }[];
+  };
+  const User = ({ users }: UserProps) => {
+    return (
+      <div>
+        {users.map((user) => {
+          const { id, name, email } = user;
+          return (
+            <div key={id} style={{ border: "1px solid", margin: "1rem" }}>
+              <p>{name}</p>
+              <p>{email}</p>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+  export default User;
   ```
 
-// children passing
-import React from "react";
+- union of types
 
-type HeadingProps = {
-children: string;
-};
+  ```tsx
+  // Message.tsx
+  import React from "react";
 
-const Heading = (props: HeadingProps) => {
-return <p>{props.children}</p>;
-};
+  type MessageProps = {
+    text: "ADD" | "UPDATE" | "DELETE";
+  };
 
-export default Heading;
+  const Message = (props: MessageProps) => {
+    if (props.text === "ADD") {
+      return <p>User is added</p>;
+    } else if (props.text === "UPDATE") {
+      return <p>User is updated</p>;
+    }
+    return <p>User is deleted</p>;
+  };
 
-     <Heading>Anisul Islam</Heading>
+  export default Message;
 
+  // App.tsx
+  function App() {
+    return (
+      <div className="App">
+        <h1>User Management App</h1>
+        <Message text="UPDATE" />
+        {/* <User users={users} /> */}
+      </div>
+    );
+  }
 
-     // component type: React.ReactNode
-     // passing components inside components
-     import React from "react";
+  export default App;
+  ```
 
-     type HeadingProps = {
-       children: React.ReactNode;
-     };
+- children props
 
-     const Heading = (props: HeadingProps) => {
-       return <div>{props.children}</div>;
-     };
+  ```tsx
+  // Card.tsx
+  import React from "react";
+  type CardProps = {
+    children: React.ReactNode;
+  };
+  const Card = (props: CardProps) => {
+    return <div className="card">{props.children}</div>;
+  };
 
-     export default Heading;
+  export default Card;
 
-       <Heading>
-       <Text />
-     </Heading>
+  //User.tsx
+  import React from "react";
+  import Card from "./Card";
 
+  type UserProps = {
+    user: {
+      name: string;
+      email: string;
+      age: number;
+      isRegistered: boolean;
+      languages: string[];
+    };
+  };
+  const User = ({ user }: UserProps) => {
+    return (
+      <Card>
+        <h2>{user.name}</h2>
+        <p>{user.email}</p>
+        <p>{user.age} years old</p>
+        {user.isRegistered ? (
+          <p>Registered Student</p>
+        ) : (
+          <p>Unregistered Student</p>
+        )}
+        <p>
+          Speaks:{" "}
+          {user.languages.map((language, index) => {
+            return <span key={index}>{language} </span>;
+          })}
+        </p>
+      </Card>
+    );
+  };
+  export default User;
+  ```
 
-     // Typing event props
-     click event: event: React.MouseEvent<HTMLButtonElement>
-     type ButtonProps = {
-       handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-         handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-     };
+  // Typing event props
+  click event: event: React.MouseEvent<HTMLButtonElement>
+  type ButtonProps = {
+  handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  };
 
-     // props for styles -> React.CSSProperties
-       import React from "react";
+  // props for styles -> React.CSSProperties
+  import React from "react";
 
          type ButtonProps = {
            styles: React.CSSProperties;
