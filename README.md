@@ -1,130 +1,179 @@
-## basic props type
+# React + Typescript documentation
 
-- why ts?
-  - auto suggestion / auto completion
-  - easy debugging
-  - better documentation
-- example of basic props type
+- prerequisities - TypeScript, React Fundamentals
 
-  ```js
-    // component props is an object
-    <!-- let name: string
-    let age: number  -->
+## 1. Introduction to TypeScript
 
-    type UserProps = {
-        name: string;
-        age: number;
-      };
+- What is TypeScript?
 
-     // const User = (props: UserProps) => {
+  - programming language developed by microsoft
+  - superset of JavaScript
 
-    // const User = (props: { name: string, age: number }) => {
-    const User = ({name, age}: { name: string, age: number }) => {
-      return (
-      <div>
-        <h2>
-          {props.name} is {props.age} years old
-        </h2>
+- Why TypeScript?
+
+  - adds static typing to JavaScript
+  - it helps to see bugs when writing codes; easy to find and fix bugs
+  - gives auto suggestion
+  - provides better documentation
+
+## 2. Environment setup
+
+- install node & VSCode
+- install react+ts -> `npx create-react-app appName --template typescript`
+
+## 3. typescript for Props - built in types
+
+- built in types example -> string, number, boolean
+- extension .ts and component extension is .tsx not .js or .jsx
+
+```tsx
+// auto completion -> props.
+// if we pass anything other than string as name props we will get error
+// component props is an object
+// User.tsx (version-1)
+import React from "react";
+const User = (props: {
+  name: string;
+  email: string;
+  age: number;
+  isRegistered: boolean;
+}) => {
+  return (
+    <div style={{ border: "1px solid", margin: "1rem" }}>
+      <h2>{props.name}</h2>
+      <p>{props.email}</p>
+      <p>{props.age} years old</p>
+      {props.isRegistered ? (
+        <p>Registered Student</p>
+      ) : (
+        <p>Unregistered Student</p>
+      )}
+    </div>
+  );
+};
+
+export default User;
+
+// User.tsx (version-2)
+import React from "react";
+
+type UserProps = {
+  name: string;
+  email: string;
+  age: number;
+  isRegistered: boolean;
+};
+const User = (props: UserProps) => {
+  return (
+    <div style={{ border: "1px solid", margin: "1rem" }}>
+      <h2>{props.name}</h2>
+      <p>{props.email}</p>
+      <p>{props.age} years old</p>
+      {props.isRegistered ? (
+        <p>Registered Student</p>
+      ) : (
+        <p>Unregistered Student</p>
+      )}
+    </div>
+  );
+};
+export default User;
+
+// User.tsx (version-3)
+import React from "react";
+type UserProps = {
+  name: string;
+  email: string;
+  age: number;
+  isRegistered: boolean;
+};
+const User = ({ name, email, age, isRegistered }: UserProps) => {
+  return (
+    <div style={{ border: "1px solid", margin: "1rem" }}>
+      <h2>{name}</h2>
+      <p>{email}</p>
+      <p>{age} years old</p>
+      {isRegistered ? <p>Registered Student</p> : <p>Unregistered Student</p>}
+    </div>
+  );
+};
+export default User;
+
+// App.tsx
+import React from "react";
+import "./App.css";
+import User from "./components/User";
+
+function App() {
+  return (
+    <div className="App">
+      <h1>User Management App</h1>
+      <User
+        name="anisul islam"
+        email="anisul2010s@yahoo.co.uk"
+        age={32}
+        isRegistered={true}
+      />
+      <User
+        name="Rabeya Begum"
+        email="rabu2010s@yahoo.co.uk"
+        age={31}
+        isRegistered={false}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 4. typescript for Props - User defined types
+
+- Object, Array, Union, enum, tuple, any, custom type
+
+- object props
+
+  ```tsx
+  import React from "react";
+
+  type UserProps = {
+    user: {
+      name: string;
+      email: string;
+      age: number;
+      isRegistered: boolean;
+    };
+  };
+  const User = ({ user }: UserProps) => {
+    return (
+      <div style={{ border: "1px solid", margin: "1rem" }}>
+        <h2>{user.name}</h2>
+        <p>{user.email}</p>
+        <p>{user.age} years old</p>
+        {user.isRegistered ? (
+          <p>Registered Student</p>
+        ) : (
+          <p>Unregistered Student</p>
+        )}
       </div>
     );
   };
 
   export default User;
+  ```
 
-  import "./App.css";
-  import User from "./components/User";
+  // children passing
+  import React from "react";
 
-  function App() {
-    return (
-      <div className="App">
-        <User name="Anisul" age={32} />
-      </div>
-    );
-  }
+  type HeadingProps = {
+  children: string;
+  };
 
-  export default App;
+  const Heading = (props: HeadingProps) => {
+  return <p>{props.children}</p>;
+  };
 
-
-  // more
-    import "./App.css";
-  import User from "./components/User";
-
-
-      let location = {
-      city: "Tampere",
-      country: "Finland",
-      };
-
-      let languages = ["Bangla", "English", "Finnish"];
-
-      function App() {
-        return (
-        <div className="App">
-          <User
-                  name="Rabeya"
-                  age={31}
-                  isLoggedIn={true}
-                  location={location}
-                  languages={languages}
-                />
-        </div>
-        );
-      }
-
-      export default App;
-
-
-      import React from "react";
-
-      type UserProps = {
-        name: string;
-        age: number;
-        isLoggedIn: boolean;
-        location: {
-          city: string;
-          country: string;
-        };
-        languages: string[];
-      };
-
-      const User = (props: UserProps) => {
-        return (
-          <div>
-            {props.isLoggedIn && (
-              <div>
-                <h2>
-                  {props.name} is {props.age} years old.
-                </h2>
-                <p>
-                  Address: {props.location.city}, {props.location.country}
-                </p>
-                <p>
-                  Speaks:
-                  {props.languages.map((language, index) => {
-                    return <span key={index}> {language} </span>;
-                  })}
-                </p>
-              </div>
-            )}
-          </div>
-        );
-      };
-
-      export default User;
-
-
-    // children passing
-    import React from "react";
-
-    type HeadingProps = {
-      children: string;
-    };
-
-    const Heading = (props: HeadingProps) => {
-      return <p>{props.children}</p>;
-    };
-
-    export default Heading;
+  export default Heading;
 
       <Heading>Anisul Islam</Heading>
 
@@ -186,4 +235,7 @@
         // tips
         // 1. destructure props
         // 2. create file name as Person.types.ts and export the types so that you can import from anywhere
+
+  ```
+
   ```
