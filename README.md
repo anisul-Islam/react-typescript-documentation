@@ -490,6 +490,7 @@ const handleClick = (): void => {
 ## 5. Typing Event Props
 
 - example
+
   ```tsx
       // Typing event props
     click event: event: React.MouseEvent<HTMLButtonElement>
@@ -497,6 +498,64 @@ const handleClick = (): void => {
     handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     };
+
+    //App.tsx
+    import React, { useState } from "react";
+
+    type NewUserProps = {
+      name: string;
+      email: string;
+    };
+    const NewUser = () => {
+      const [user, setUser] = useState<NewUserProps>({ name: "", email: "" });
+
+      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const fieldName = event.target.name;
+        setUser({ ...user, [fieldName]: event.target.value });
+      };
+
+      const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        console.log(user);
+      };
+      return (
+        <div>
+          <h2>Create User</h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="name">
+                Name
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={user.name}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+            <div>
+              <label htmlFor="email">
+                Email
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+            <button type="submit">Create User</button>
+          </form>
+        </div>
+        );
+      };
+
+      export default NewUser;
+
   ```
 
 ## 6. Style Props
