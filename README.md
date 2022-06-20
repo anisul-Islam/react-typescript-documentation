@@ -693,159 +693,84 @@ const handleClick = (): void => {
 - example
 
   ```tsx
-  import React, { useReducer, useState } from "react";
-  import "./App.css";
+  // Counter.tsx
+  import React, { useReducer } from "react";
 
-  type CounterState = {
+  const INCREMENT = "INCREMENT";
+  const INCREMENTBYAMOUNT = "INCREMENTBYAMOUNT";
+  const RESET = "RESET";
+  const DECREMENT = "DECREMENT";
+
+  const initialState = { count: 0 };
+  type counterState = {
     count: number;
   };
 
-  type CounterAction = {
-    type: string;
-    payload?: number;
-  };
-
-  const initialState = {
-    count: 0,
-  };
-
-  const reducer = (state: CounterState, action: CounterAction) => {
-    switch (action.type) {
-      case "INCREMENT":
-        return {
-          ...state,
-          count: state.count + 1,
-        };
-      case "RESET":
-        return {
-          ...state,
-          count: 0,
-        };
-      case "DECREMENT":
-        return {
-          ...state,
-          count: state.count - 1,
-        };
-
-      default:
-        return state;
-    }
-  };
-
-  const App = () => {
-    // const [count, setCount] = useState(0);
-    const [state, dispatch] = useReducer(reducer, initialState);
-
-    const handleIncrement = () => {
-      dispatch({ type: "INCREMENT" });
-    };
-
-    const handleReset = () => {
-      dispatch({ type: "RESET" });
-    };
-
-    const handleDecrement = () => {
-      dispatch({ type: "DECREMENT" });
-    };
-
-    return (
-      <div className="App">
-        <h1>Count : {state.count}</h1>
-        <button onClick={handleIncrement}>+</button>
-        <button onClick={handleReset}>0</button>
-        <button onClick={handleDecrement}>-</button>
-      </div>
-    );
-  };
-
-  export default App;
-
-  //Restricting action types
-  type CounterAction = {
-    type: "INCREMENT" | "DECREMENT" | "RESET";
-    payload?: number;
-  };
-
-  import React, { useReducer, useState } from "react";
-  import "./App.css";
-
-  type CounterState = {
-    count: number;
-  };
-
-  type UpdateAction = {
-    type: "INCREMENT" | "DECREMENT" | "RESET";
-    payload?: number;
-  };
-
-  type CounterActionBy5 = {
-    type: "INCREMENTBY5";
+  type IncrementActionType = { type: typeof INCREMENT };
+  type IncrementByAmountActionType = {
+    type: typeof INCREMENTBYAMOUNT;
     payload: number;
   };
+  type ResetActionType = { type: typeof RESET };
+  type DecrementActionType = { type: typeof DECREMENT };
 
-  const initialState = {
-    count: 0,
-  };
+  type counterActionType =
+    | IncrementActionType
+    | DecrementActionType
+    | ResetActionType
+    | IncrementByAmountActionType;
 
-  type CounterAction = UpdateAction | CounterActionBy5;
-
-  const reducer = (state: CounterState, action: CounterAction) => {
+  const reducer = (state: counterState, action: counterActionType) => {
     switch (action.type) {
-      case "INCREMENT":
-        return {
-          ...state,
-          count: state.count + 1,
-        };
-      case "INCREMENTBY5":
-        return {
-          ...state,
-          count: state.count + action.payload,
-        };
-      case "RESET":
-        return {
-          ...state,
-          count: 0,
-        };
-      case "DECREMENT":
-        return {
-          ...state,
-          count: state.count - 1,
-        };
-
+      case INCREMENT:
+        return { count: state.count + 1 };
+      case INCREMENTBYAMOUNT:
+        return { count: state.count + action.payload };
+      case RESET:
+        return { count: 0 };
+      case DECREMENT:
+        return { count: state.count - 1 };
       default:
-        return state;
+        throw new Error();
     }
   };
 
-  const App = () => {
-    // const [count, setCount] = useState(0);
+  const Counter = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
-
-    const handleIncrement = () => {
-      dispatch({ type: "INCREMENT" });
-    };
-    const handleIncrementBy5 = () => {
-      dispatch({ type: "INCREMENTBY5", payload: 5 });
-    };
-
-    const handleReset = () => {
-      dispatch({ type: "RESET" });
-    };
-
-    const handleDecrement = () => {
-      dispatch({ type: "DECREMENT" });
-    };
-
     return (
-      <div className="App">
-        <h1>Count : {state.count}</h1>
-        <button onClick={handleIncrement}>+</button>
-        <button onClick={handleIncrementBy5}>+5</button>
-        <button onClick={handleReset}>0</button>
-        <button onClick={handleDecrement}>-</button>
+      <div>
+        <h1> Count : {state.count}</h1>
+        <button
+          onClick={() => {
+            dispatch({ type: INCREMENT });
+          }}
+        >
+          Increment
+        </button>
+        <button
+          onClick={() => {
+            dispatch({ type: INCREMENTBYAMOUNT, payload: 5 });
+          }}
+        >
+          IncrementByAmount
+        </button>
+        <button
+          onClick={() => {
+            dispatch({ type: RESET });
+          }}
+        >
+          Reset
+        </button>
+        <button
+          onClick={() => {
+            dispatch({ type: DECREMENT });
+          }}
+        >
+          Decrement
+        </button>
       </div>
     );
   };
 
-  export default App;
+  export default Counter;
   ```
