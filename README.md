@@ -518,6 +518,18 @@ const handleClick = (): void => {
         event.preventDefault();
         console.log(user);
       };
+
+
+      const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const newTodo = { id: Math.random().toString(), title };
+        onAddNewTodo(newTodo);
+
+          // const target = event.target as typeof event.target & {
+          //   title: { value: string };
+          // };
+          // console.log(target.title.value);
+      };
       return (
         <div>
           <h2>Create User</h2>
