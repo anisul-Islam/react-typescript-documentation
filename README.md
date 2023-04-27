@@ -708,42 +708,39 @@ const handleClick = (): void => {
   // Counter.tsx
   import React, { useReducer } from "react";
 
-  const INCREMENT = "INCREMENT";
-  const INCREMENTBYAMOUNT = "INCREMENTBYAMOUNT";
-  const RESET = "RESET";
-  const DECREMENT = "DECREMENT";
-
   const initialState = { count: 0 };
+
+  enum ActionType {
+    Increment = "INCREMENT",
+    Decrement = "DECREMENT",
+    IncrementByAmount = "INCREMENT_BY_AMOUNT",
+    DecrementByAmount = "DECREMENT_BY_AMOUNT",
+    Reset = "RESET",
+  }
+
+  interface Action {
+    type: ActionType;
+    payload?: number;
+  }
+
   type counterState = {
     count: number;
   };
 
-  type IncrementActionType = { type: typeof INCREMENT };
-  type IncrementByAmountActionType = {
-    type: typeof INCREMENTBYAMOUNT;
-    payload: number;
-  };
-  type ResetActionType = { type: typeof RESET };
-  type DecrementActionType = { type: typeof DECREMENT };
-
-  type counterActionType =
-    | IncrementActionType
-    | DecrementActionType
-    | ResetActionType
-    | IncrementByAmountActionType;
-
-  const reducer = (state: counterState, action: counterActionType) => {
+  const reducer = (state: counterState, action: Action) => {
     switch (action.type) {
-      case INCREMENT:
+      case ActionType.Increment:
         return { count: state.count + 1 };
-      case INCREMENTBYAMOUNT:
-        return { count: state.count + action.payload };
-      case RESET:
-        return { count: 0 };
-      case DECREMENT:
+      case ActionType.Decrement:
         return { count: state.count - 1 };
+      case ActionType.IncrementByAmount:
+        return { count: state.count + action.payload };
+      case ActionType.DecrementByAmount:
+        return { count: state.count - action.payload };
+      case ActionType.Reset:
+        return initialState;
       default:
-        throw new Error();
+        return state;
     }
   };
 
@@ -754,28 +751,28 @@ const handleClick = (): void => {
         <h1> Count : {state.count}</h1>
         <button
           onClick={() => {
-            dispatch({ type: INCREMENT });
+            dispatch({ type: ActionType.Increment });
           }}
         >
           Increment
         </button>
         <button
           onClick={() => {
-            dispatch({ type: INCREMENTBYAMOUNT, payload: 5 });
+            dispatch({ type: ActionType.IncrementByAmount, payload: 5 });
           }}
         >
           IncrementByAmount
         </button>
         <button
           onClick={() => {
-            dispatch({ type: RESET });
+            dispatch({ type: ActionType.Reset });
           }}
         >
           Reset
         </button>
         <button
           onClick={() => {
-            dispatch({ type: DECREMENT });
+            dispatch({ type: ActionType.Decrement });
           }}
         >
           Decrement
